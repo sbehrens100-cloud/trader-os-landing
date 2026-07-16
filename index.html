@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TRADER OS — Dein Trading. Dein Leben. Ein Dashboard.</title>
+<meta name="description" content="TRADER OS bündelt Trading-Journal, KI-Assistent MAX, Marktüberblick, Habits, Kalender, Fitness-Tracking und eine Trading-Community in einem Dashboard. Jetzt auf die Warteliste für den Early Access." />
+<style>
+  :root{
+    --bg:#0a0704;
+    --panel:#120d08;
+    --panel2:#171009;
+    --border:#3a2a12;
+    --gold:#e0a53c;
+    --gold-dim:#a97e35;
+    --text:#f3e6c9;
+    --text-dim:#c9b896;
+    --text-dim2:#8a7a5c;
+    --green:#5fbf8f;
+    --red:#e0655c;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:"JetBrains Mono","Courier New",monospace;
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 24px;}
+  .bg-grid{
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.35;
+    background-image:
+      linear-gradient(rgba(224,165,60,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(224,165,60,.04) 1px, transparent 1px);
+    background-size:42px 42px;
+  }
+
+  /* Nav */
+  nav{
+    position:sticky; top:0; z-index:20; background:rgba(10,7,4,.9); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+  }
+  nav .inner{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;max-width:1100px;margin:0 auto;}
+  .logo{font-weight:800;letter-spacing:2px;font-size:15px;color:var(--gold);display:flex;align-items:center;gap:8px;}
+  .logo .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);display:inline-block;}
+  .navlinks{display:flex;gap:26px;font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:var(--text-dim);}
+  .navlinks a{text-decoration:none;}
+  .navlinks a:hover{color:var(--gold);}
+  .navlinks{display:none;}
+  @media (min-width:720px){ .navlinks{display:flex;} }
+  .btn{
+    display:inline-block; border:1px solid var(--gold); color:var(--gold); background:rgba(224,165,60,.08);
+    padding:10px 18px; border-radius:8px; font-size:12px; letter-spacing:.5px; text-transform:uppercase;
+    text-decoration:none; cursor:pointer; font-family:inherit; font-weight:700; transition:background .15s;
+  }
+  .btn:hover{background:rgba(224,165,60,.2);}
+  .btn.solid{background:var(--gold);color:#1a1206;border-color:var(--gold);}
+  .btn.solid:hover{background:#eeb457;}
+
+  section{position:relative;z-index:1;}
+
+  /* Hero */
+  .hero{padding:100px 0 80px;text-align:center;}
+  .hero .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--gold-dim);border:1px solid var(--border);border-radius:20px;padding:6px 14px;margin-bottom:26px;
+  }
+  .hero h1{font-size:clamp(30px,5vw,52px);line-height:1.15;margin:0 0 20px;font-weight:800;letter-spacing:-.5px;}
+  .hero h1 span{color:var(--gold);}
+  .hero p.sub{font-size:16px;color:var(--text-dim);max-width:600px;margin:0 auto 40px;}
+
+  .step-badge{
+    display:inline-flex;align-items:center;gap:6px;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;
+    color:var(--gold-dim);border:1px solid var(--border);border-radius:20px;padding:5px 12px;margin-bottom:14px;
+  }
+  .waitlist-form{
+    max-width:480px;margin:0 auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+  }
+  .waitlist-form input[type=email]{
+    flex:1;min-width:220px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;
+    padding:13px 16px;color:var(--text);font-family:inherit;font-size:14px;
+  }
+  .waitlist-form input[type=email]:focus{outline:none;border-color:var(--gold);}
+  .waitlist-form button{border:none;}
+  .form-note{font-size:11.5px;color:var(--text-dim2);margin-top:12px;}
+  .form-success{display:none;color:var(--green);font-size:13px;margin-top:14px;}
+  .form-success.show{display:block;}
+
+  .hero-mock{
+    max-width:900px;margin:64px auto 0;border:1px solid var(--border);border-radius:14px;
+    background:var(--panel);padding:18px;box-shadow:0 30px 80px -30px rgba(0,0,0,.6);
+  }
+  .hero-mock .bar{display:flex;gap:6px;margin-bottom:14px;padding:0 4px;}
+  .hero-mock .bar span{width:9px;height:9px;border-radius:50%;background:var(--border);}
+  .mock-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  @media (max-width:760px){ .mock-grid{grid-template-columns:1fr 1fr;} }
+  .mock-card{border:1px solid var(--border);border-radius:10px;padding:14px;background:rgba(255,255,255,.015);text-align:left;}
+  .mock-card .lbl{font-size:9.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--text-dim2);margin-bottom:6px;}
+  .mock-card .val{font-size:20px;font-weight:800;color:var(--gold);}
+  .mock-card .sub{font-size:10.5px;color:var(--text-dim);margin-top:4px;}
+
+  /* Section heading */
+  .section-head{text-align:center;max-width:600px;margin:0 auto 50px;}
+  .section-head .idx{font-size:11px;letter-spacing:2px;color:var(--gold-dim);text-transform:uppercase;margin-bottom:10px;}
+  .section-head h2{font-size:clamp(22px,3.4vw,32px);margin:0 0 14px;font-weight:800;}
+  .section-head p{color:var(--text-dim);font-size:14.5px;margin:0;}
+
+  /* Features */
+  .features{padding:90px 0;}
+  .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  @media (max-width:900px){ .feature-grid{grid-template-columns:1fr 1fr;} }
+  @media (max-width:560px){ .feature-grid{grid-template-columns:1fr;} }
+  .feature-card{
+    border:1px solid var(--border);border-radius:12px;padding:24px;background:var(--panel);
+    transition:border-color .15s;
+  }
+  .feature-card:hover{border-color:var(--gold-dim);}
+  .feature-card .num{font-size:12px;color:var(--gold-dim);letter-spacing:1px;margin-bottom:14px;}
+  .feature-card h3{font-size:16px;margin:0 0 10px;font-weight:700;}
+  .feature-card p{font-size:13px;color:var(--text-dim);margin:0;line-height:1.6;}
+
+  /* How it works */
+  .how{padding:90px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(255,255,255,.012);}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  @media (max-width:800px){ .steps{grid-template-columns:1fr;} }
+  .step{text-align:center;padding:0 12px;}
+  .step .circle{
+    width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);color:var(--gold);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-weight:800;font-size:15px;
+  }
+  .step h3{font-size:15px;margin:0 0 8px;}
+  .step p{font-size:13px;color:var(--text-dim);margin:0;}
+
+  /* Pricing */
+  .pricing{padding:90px 0;text-align:center;}
+  .price-card{
+    max-width:380px;margin:0 auto;border:1px solid var(--gold-dim);border-radius:14px;padding:36px 30px;
+    background:var(--panel);
+  }
+  .price-card .tag{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px;}
+  .price-card .amount{font-size:38px;font-weight:800;color:var(--gold);}
+  .price-card .amount small{font-size:14px;color:var(--text-dim);font-weight:400;}
+  .price-card ul{list-style:none;padding:0;margin:22px 0;text-align:left;font-size:13px;color:var(--text-dim);}
+  .price-card li{padding:6px 0;border-bottom:1px solid var(--border);}
+  .price-card li:last-child{border-bottom:none;}
+  .price-note{font-size:12px;color:var(--text-dim2);margin-top:18px;max-width:380px;margin-left:auto;margin-right:auto;}
+
+  /* FAQ */
+  .faq{padding:90px 0;border-top:1px solid var(--border);}
+  .faq-item{border-bottom:1px solid var(--border);padding:20px 0;max-width:720px;margin:0 auto;}
+  .faq-item h3{font-size:14.5px;margin:0 0 8px;color:var(--text);}
+  .faq-item p{font-size:13px;color:var(--text-dim);margin:0;}
+
+  /* Final CTA */
+  .final-cta{padding:100px 0;text-align:center;}
+  .final-cta h2{font-size:clamp(22px,3.6vw,34px);margin:0 0 16px;font-weight:800;}
+  .final-cta p{color:var(--text-dim);margin:0 0 34px;}
+
+  footer{border-top:1px solid var(--border);padding:32px 0;}
+  .footer-inner{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;font-size:12px;color:var(--text-dim2);}
+  .footer-links{display:flex;gap:18px;}
+  .footer-links a{text-decoration:none;}
+  .footer-links a:hover{color:var(--gold);}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<nav>
+  <div class="inner">
+    <div class="logo"><span class="dot"></span> TRADER OS</div>
+    <div class="navlinks">
+      <a href="#features">Features</a>
+      <a href="#how">So funktioniert's</a>
+      <a href="#pricing">Preise</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="#waitlist" class="btn solid">Early Access sichern</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">// Early Access · Warteliste offen</span>
+    <h1>Dein Trading.<br/>Dein <span>Leben</span>. Ein Dashboard.</h1>
+    <p class="sub">Trading-Journal, Marktüberblick, Kalender, Gewohnheiten, Kalorien- und Fitness-Tracking — jetzt mit
+      MAX, deinem persönlichen KI-Assistenten, und eigener Trading-Community. Alles an einem Ort, statt in
+      fünf verschiedenen Apps. Für Trader, die auch abseits vom Chart diszipliniert bleiben wollen.</p>
+
+    <div class="step-badge">Schritt 1 von 2 — Email für Zugang</div>
+    <form class="waitlist-form" id="waitlistForm" action="https://formspree.io/f/maqrewjz" method="POST">
+      <input type="email" name="email" id="waitlistEmail" placeholder="deine@email.de" required />
+      <button type="submit" class="btn solid">Zugang sichern →</button>
+    </form>
+    <div class="form-note">Kostenlos &amp; unverbindlich. Weiter geht's direkt zur Registrierung.</div>
+    <div class="form-success" id="waitlistSuccess">✓ Zugang bestätigt! Du wirst jetzt zur Registrierung weitergeleitet …</div>
+
+    <div class="hero-mock">
+      <div class="bar"><span></span><span></span><span></span></div>
+      <div class="mock-grid">
+        <div class="mock-card">
+          <div class="lbl">Trading Journal</div>
+          <div class="val">+18.4%</div>
+          <div class="sub">Gewinnrate diesen Monat</div>
+        </div>
+        <div class="mock-card">
+          <div class="lbl">Kalorien-Budget</div>
+          <div class="val">1.287</div>
+          <div class="sub">kcal Tagesziel · 97% erreicht</div>
+        </div>
+        <div class="mock-card">
+          <div class="lbl">Routinen</div>
+          <div class="val">12</div>
+          <div class="sub">Tage Streak am Stück</div>
+        </div>
+        <div class="mock-card">
+          <div class="lbl">Neural Nexus Score</div>
+          <div class="val">82</div>
+          <div class="sub">Trading, Habits &amp; Gesundheit kombiniert</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="idx">// 01 — Features</div>
+      <h2>Alles, was du täglich brauchst</h2>
+      <p>Kein Zusammensuchen mehr zwischen Trading-App, Habit-Tracker und Ernährungs-App.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="num">01</div>
+        <h3>Trading Journal &amp; Statistik</h3>
+        <p>Trades erfassen, Gewinnrate, Drawdown und Performance nach Strategie, Paar und Session auswerten — mit Charts statt Excel-Tabellen.</p>
+      </div>
+      <div class="feature-card">
+        <div class="num">02</div>
+        <h3>MAX — Dein KI-Assistent</h3>
+        <p>Sprich oder schreib mit MAX. Er kennt deine Trades, Ziele und Routinen und hilft bei Analyse, Struktur, Entscheidungen und der Umsetzung im Alltag.</p>
+      </div>
+      <div class="feature-card">
+        <div class="num">03</div>
+        <h3>Marktüberblick &amp; XCO Bot</h3>
+        <p>Ein gebündelter Blick auf deine wichtigsten Märkte — Score, Bias und Kontext auf einen Blick, inklusive automatischem Trading-Bot-Signal.</p>
+      </div>
+      <div class="feature-card">
+        <div class="num">04</div>
+        <h3>Kalender, Fristen &amp; Dokumente</h3>
+        <p>Termine, Fristen mit Vorlauf-Warnung, wichtige Dokumente und Einkaufslisten — alles an einem Ort statt in fünf Apps verteilt.</p>
+      </div>
+      <div class="feature-card">
+        <div class="num">05</div>
+        <h3>Kalorien-, Fitness- &amp; Schlaf-Tracking</h3>
+        <p>Individuelles Kalorien- und Eiweißziel per Harris-Benedict-Formel, Mahlzeiten-Kategorien, Gewichtsverlauf, Schlaftracking und High-Protein-Rezepte.</p>
+      </div>
+      <div class="feature-card">
+        <div class="num">06</div>
+        <h3>Habits &amp; Routinen</h3>
+        <p>Streaks, Ziele und tägliche Gewohnheiten im Blick behalten — Trading-Disziplin und Alltagsdisziplin an einem Ort.</p>
+      </div>
+      <div class="feature-card">
+        <div class="num">07</div>
+        <h3>Edge Feed &amp; Community</h3>
+        <p>Trading-Erfolge und Momente teilen, Freunde hinzufügen, Gruppen-Chats starten — deine eigene Trading-Community direkt im Dashboard.</p>
+      </div>
+      <div class="feature-card">
+        <div class="num">08</div>
+        <h3>Trading-Checkliste</h3>
+        <p>Vorgefertigte Regel-Vorlagen (Risiko, Chance-Risiko-Verhältnis, Revenge-Trading vermeiden) per Klick zur eigenen Checkliste hinzufügen.</p>
+      </div>
+      <div class="feature-card">
+        <div class="num">09</div>
+        <h3>Personalisierung &amp; Smart Capture</h3>
+        <p>Navigation frei anpassen, aus über 10 Designs wählen — und alles einfach per Smart Capture eintippen: Termin, Habit, Trade oder To-Do wird automatisch richtig einsortiert.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="idx">// 02 — Ablauf</div>
+      <h2>In drei Schritten startklar</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="circle">1</div>
+        <h3>Registrieren</h3>
+        <p>Konto anlegen, kurz dein Profil ausfüllen (Ziele, Gewicht, Sportlevel) — daraus wird dein persönliches Setup berechnet.</p>
+      </div>
+      <div class="step">
+        <div class="circle">2</div>
+        <h3>Dashboard einrichten</h3>
+        <p>Kategorien, Watchlist und Routinen nach deinem Alltag anpassen. Alles läuft synchron, egal von welchem Gerät.</p>
+      </div>
+      <div class="step">
+        <div class="circle">3</div>
+        <h3>Täglich nutzen</h3>
+        <p>Trades eintragen, Mahlzeiten loggen, Checkliste abhaken — dein Fortschritt läuft automatisch mit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="idx">// 03 — Preise</div>
+      <h2>Ein einfacher monatlicher Plan</h2>
+      <p>Der finale Preis wird beim Launch bekanntgegeben — Warteliste sichert dir einen Frühbucher-Vorteil.</p>
+    </div>
+    <div class="price-card">
+      <div class="tag">Early Access</div>
+      <div class="amount">TBD <small>/ Monat</small></div>
+      <ul>
+        <li>Vollzugriff auf alle Bereiche</li>
+        <li>Trading Journal, Marktüberblick &amp; KI-Assistent MAX</li>
+        <li>Kalender, Kalorien-, Fitness- &amp; Habit-Tracking</li>
+        <li>Edge Feed Community &amp; über 10 Designs</li>
+        <li>Monatlich kündbar</li>
+      </ul>
+      <a href="#waitlist" class="btn solid" style="width:100%;">Frühbucher-Preis sichern</a>
+    </div>
+    <p class="price-note">Preis wird vor Launch final festgelegt und hier aktualisiert.</p>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="idx">// 04 — FAQ</div>
+      <h2>Häufige Fragen</h2>
+    </div>
+    <div class="faq-item">
+      <h3>Wann geht TRADER OS online?</h3>
+      <p>Wir arbeiten aktuell am Übergang von der lokalen App zur Web-Version. Warteliste-Mitglieder erfahren als Erstes vom Start.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Sind meine Daten sicher?</h3>
+      <p>Deine Trading-, Ernährungs- und Habit-Daten werden verschlüsselt gespeichert und nur für dein eigenes Konto sichtbar.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Ist das Anlageberatung?</h3>
+      <p>Nein. TRADER OS ist ein persönliches Organisations- und Journal-Tool. Es gibt keine Kauf- oder Verkaufsempfehlungen und ersetzt keine professionelle Anlageberatung.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Kann ich jederzeit kündigen?</h3>
+      <p>Ja, das Abo ist monatlich kündbar, keine Mindestlaufzeit.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Gibt es eine Desktop-App?</h3>
+      <p>Ja — TRADER OS gibt es als Web-Version für unterwegs und als Windows-Desktop-App, wenn du lieber ohne Browser arbeitest. Beide greifen auf dieselben Daten zu.</p>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta" id="waitlist">
+  <div class="wrap">
+    <h2>Sichere dir jetzt deinen Platz</h2>
+    <p>Email eintragen und direkt weiter zur Registrierung.</p>
+    <div class="step-badge">Schritt 1 von 2 — Email für Zugang</div>
+    <form class="waitlist-form" id="waitlistForm2" action="https://formspree.io/f/maqrewjz" method="POST">
+      <input type="email" name="email" id="waitlistEmail2" placeholder="deine@email.de" required />
+      <button type="submit" class="btn solid">Zugang sichern →</button>
+    </form>
+    <div class="form-success" id="waitlistSuccess2">✓ Zugang bestätigt! Du wirst jetzt zur Registrierung weitergeleitet …</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div>© 2026 TRADER OS. Alle Rechte vorbehalten.</div>
+    <div class="footer-links">
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+      <a href="#faq">FAQ</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var REGISTER_URL = "https://webapp-production-f4b9.up.railway.app/register";
+
+  function wireWaitlistForm(formId, successId){
+    var form = document.getElementById(formId);
+    var success = document.getElementById(successId);
+    if(!form) return;
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      var formData = new FormData(form);
+      var email = formData.get("email") || "";
+      var action = form.getAttribute("action") || "";
+      var isConfigured = action.indexOf("YOUR_FORM_ID") === -1;
+      if(isConfigured){
+        fetch(action, { method: "POST", body: formData, headers: { "Accept": "application/json" } })
+          .then(function(){ goToRegister(); })
+          .catch(function(){ goToRegister(); });
+      } else {
+        // Formular-Endpunkt (z.B. Formspree) noch nicht eingerichtet — trotzdem
+        // direkt weiter zur Registrierung, damit der Fluss testbar bleibt.
+        goToRegister();
+      }
+      function goToRegister(){
+        form.style.display = "none";
+        if(success){ success.classList.add("show"); }
+        // Email wird als Query-Parameter mitgegeben, damit sie auf der
+        // Registrierungsseite (Schritt 2) automatisch vorausgefüllt ist.
+        setTimeout(function(){
+          window.location.href = REGISTER_URL + "?email=" + encodeURIComponent(email);
+        }, 900);
+      }
+    });
+  }
+  wireWaitlistForm("waitlistForm", "waitlistSuccess");
+  wireWaitlistForm("waitlistForm2", "waitlistSuccess2");
+</script>
+</body>
+</html>
