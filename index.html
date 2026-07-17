@@ -174,9 +174,25 @@
 
   footer{border-top:1px solid var(--border);padding:32px 0;}
   .footer-inner{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;font-size:12px;color:var(--text-dim2);}
-  .footer-links{display:flex;gap:18px;}
+  .footer-links{display:flex;gap:18px;flex-wrap:wrap;}
   .footer-links a{text-decoration:none;}
   .footer-links a:hover{color:var(--gold);}
+  .footer-links button{background:none;border:none;padding:0;color:inherit;font-family:inherit;font-size:inherit;cursor:pointer;text-decoration:none;}
+  .footer-links button:hover{color:var(--gold);}
+
+  /* Cookie-Consent (TTDSG): erst nach Zustimmung wird optionales
+     Marketing-Tracking (z.B. TikTok Pixel) geladen. Ohne Entscheidung bleibt
+     alles aus -- "Ablehnen" ist gleichwertig sichtbar wie "Akzeptieren". */
+  .cookie-banner{
+    position:fixed;left:0;right:0;bottom:0;z-index:9999;
+    background:var(--panel2);border-top:1px solid var(--border);
+    padding:16px 24px;display:none;box-shadow:0 -10px 30px rgba(0,0,0,.4);
+  }
+  .cookie-banner.show{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;}
+  .cookie-banner-text{font-size:12px;color:var(--text-dim);max-width:640px;flex:1;min-width:240px;}
+  .cookie-banner-text a{color:var(--gold-dim);}
+  .cookie-banner-actions{display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap;}
+  .cookie-banner .btn{padding:9px 16px;font-size:11px;}
 </style>
 </head>
 <body>
@@ -510,11 +526,80 @@
       <a href="impressum.html">Impressum</a>
       <a href="datenschutz.html">Datenschutz</a>
       <a href="#faq">FAQ</a>
+      <button type="button" id="cookieSettingsLink">Cookie-Einstellungen</button>
     </div>
   </div>
 </footer>
 
+<div class="cookie-banner" id="cookieBanner">
+  <div class="cookie-banner-text">Wir verwenden Cookies nur, wenn du zustimmst — z.B. um zu messen, wie gut unsere TikTok-Werbung funktioniert. Ohne Zustimmung wird nichts geladen. Mehr dazu in der <a href="datenschutz.html">Datenschutzerklärung</a>.</div>
+  <div class="cookie-banner-actions">
+    <button type="button" class="btn" id="cookieDecline">Ablehnen</button>
+    <button type="button" class="btn solid" id="cookieAccept">Akzeptieren</button>
+  </div>
+</div>
+
 <script>
+  // ---------- Cookie-Consent (TTDSG § 25 / DSGVO Art. 6 Abs. 1 lit. a) ----------
+  // Ohne Zustimmung wird NICHTS geladen. Erst nach Klick auf "Akzeptieren"
+  // (und nur dann) wird der TikTok Pixel initialisiert -- und auch nur, wenn
+  // unten eine echte Pixel-ID eingetragen wurde. Die Entscheidung wird lokal
+  // gespeichert, damit der Banner nicht bei jedem Besuch neu erscheint, ist
+  // aber jederzeit ueber "Cookie-Einstellungen" im Footer aenderbar.
+  var TIKTOK_PIXEL_ID = "DEIN_TIKTOK_PIXEL_ID"; // beim Start der TikTok-Kampagne im TikTok Ads Manager holen und hier eintragen
+
+  function loadTikTokPixel(){
+    if(!TIKTOK_PIXEL_ID || TIKTOK_PIXEL_ID.indexOf("DEIN_") === 0) return; // noch keine echte Pixel-ID hinterlegt -> nichts laden
+    if(window.ttq) return; // schon geladen
+    (function (w, d, t) {
+      w.TiktokAnalyticsObject = t;
+      var ttq = w[t] = w[t] || [];
+      ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie", "holdConsent", "revokeConsent", "grantConsent"];
+      ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))); }; };
+      for (var i = 0; i < ttq.methods.length; i++) { ttq.setAndDefer(ttq, ttq.methods[i]); }
+      ttq.instance = function (t) {
+        var e = ttq._i[t] || [];
+        for (var n = 0; n < e.length; n++) { ttq.setAndDefer(e, e[n]); }
+        return e;
+      };
+      ttq.load = function (e, n) {
+        var i = "https://analytics.tiktok.com/i18n/pixel/events.js", o = n && n.partner;
+        ttq._i = ttq._i || {}; ttq._i[e] = []; ttq._i[e]._u = i;
+        ttq._t = ttq._t || {}; ttq._t[e] = +new Date();
+        ttq._o = ttq._o || {}; ttq._o[e] = n || {};
+        var scr = d.createElement("script");
+        scr.type = "text/javascript"; scr.async = true; scr.src = i + "?sdkid=" + e + "&lib=" + t;
+        var first = d.getElementsByTagName("script")[0];
+        first.parentNode.insertBefore(scr, first);
+      };
+      ttq.load(TIKTOK_PIXEL_ID);
+      ttq.page();
+    })(window, document, "ttq");
+  }
+
+  function applyCookieConsent(choice){
+    try { localStorage.setItem("cookie_consent", choice); } catch (e) {}
+    var banner = document.getElementById("cookieBanner");
+    if(banner) banner.classList.remove("show");
+    if(choice === "accepted"){ loadTikTokPixel(); }
+  }
+  (function(){
+    var banner = document.getElementById("cookieBanner");
+    if(!banner) return;
+    var saved = null;
+    try { saved = localStorage.getItem("cookie_consent"); } catch (e) {}
+    if(saved === "accepted"){ loadTikTokPixel(); }
+    else if(saved !== "declined"){ banner.classList.add("show"); }
+    var acceptBtn = document.getElementById("cookieAccept");
+    var declineBtn = document.getElementById("cookieDecline");
+    if(acceptBtn){ acceptBtn.addEventListener("click", function(){ applyCookieConsent("accepted"); }); }
+    if(declineBtn){ declineBtn.addEventListener("click", function(){ applyCookieConsent("declined"); }); }
+    var settingsLink = document.getElementById("cookieSettingsLink");
+    if(settingsLink){
+      settingsLink.addEventListener("click", function(){ banner.classList.add("show"); });
+    }
+  })();
+
   // Interesse-Formular: geht NUR an Formspree (grobe Interesse-Zaehlung fuer
   // z.B. TikTok-Traffic). Diese Seite bietet bewusst KEINEN Weg zur echten
   // Registrierung -- die ist ein komplett separater Link/Schritt, nicht
