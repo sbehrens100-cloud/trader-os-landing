@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>TRADER OS — Dein Trading. Dein Leben. Ein Dashboard.</title>
-<meta name="description" content="TRADER OS bündelt Trading-Journal, KI-Assistent MAX, Marktüberblick, Habits, Kalender, Fitness-Tracking und eine Trading-Community in einem Dashboard. Jetzt auf die Warteliste für den Early Access." />
+<meta name="description" content="TRADER OS bündelt Trading-Journal, KI-Assistent MAX, Marktüberblick, Habits, Kalender, Fitness-Tracking und eine Trading-Community in einem Dashboard. Ein Blick rein — Beta mit begrenztem Zugang." />
 <style>
   :root{
     --bg:#0a0704;
@@ -70,20 +70,18 @@
   .hero h1 span{color:var(--gold);}
   .hero p.sub{font-size:16px;color:var(--text-dim);max-width:600px;margin:0 auto 40px;}
 
-  .step-badge{
-    display:inline-flex;align-items:center;gap:6px;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;
-    color:var(--gold-dim);border:1px solid var(--border);border-radius:20px;padding:5px 12px;margin-bottom:14px;
-  }
-  .waitlist-form{
+  .interest-form{
     max-width:480px;margin:0 auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
   }
-  .waitlist-form input[type=email]{
+  .interest-form input[type=email]{
     flex:1;min-width:220px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;
     padding:13px 16px;color:var(--text);font-family:inherit;font-size:14px;
   }
-  .waitlist-form input[type=email]:focus{outline:none;border-color:var(--gold);}
-  .waitlist-form button{border:none;}
-  .form-note{font-size:11.5px;color:var(--text-dim2);margin-top:12px;}
+  .interest-form input[type=email]:focus{outline:none;border-color:var(--gold);}
+  .interest-form button{border:none;}
+  .form-note{font-size:11.5px;color:var(--text-dim2);margin-top:14px;}
+  .form-note a{color:var(--gold-dim);text-decoration:underline;}
+  .form-note a:hover{color:var(--gold);}
   .form-success{display:none;color:var(--green);font-size:13px;margin-top:14px;}
   .form-success.show{display:block;}
 
@@ -99,6 +97,23 @@
   .mock-card .lbl{font-size:9.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--text-dim2);margin-bottom:6px;}
   .mock-card .val{font-size:20px;font-weight:800;color:var(--gold);}
   .mock-card .sub{font-size:10.5px;color:var(--text-dim);margin-top:4px;}
+
+  /* Showcase: detaillierte Panel-Mockups ("Blick ins Dashboard") */
+  .showcase{padding:80px 0 90px;}
+  .screen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  @media (max-width:900px){ .screen-grid{grid-template-columns:1fr 1fr;} }
+  @media (max-width:600px){ .screen-grid{grid-template-columns:1fr;} }
+  .screen-card{
+    border:1px solid var(--border);border-radius:14px;background:var(--panel);
+    padding:18px 18px 20px;overflow:hidden;transition:border-color .15s, transform .15s;
+  }
+  .screen-card:hover{border-color:var(--gold-dim);transform:translateY(-2px);}
+  .screen-card-head{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+  .screen-card-head .ic{font-size:15px;}
+  .screen-card-head .lbl{font-size:11.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--text-dim);font-weight:700;}
+  .screen-card svg{display:block;width:100%;height:auto;}
+  .screen-card-foot{margin-top:12px;font-size:11.5px;color:var(--text-dim2);line-height:1.5;}
+  .screen-card-foot b{color:var(--text-dim);}
 
   /* Section heading */
   .section-head{text-align:center;max-width:600px;margin:0 auto 50px;}
@@ -171,30 +186,30 @@
   <div class="inner">
     <div class="logo"><span class="dot"></span> TRADER OS</div>
     <div class="navlinks">
+      <a href="#showcase">Reinschauen</a>
       <a href="#features">Features</a>
       <a href="#how">So funktioniert's</a>
       <a href="#pricing">Preise</a>
       <a href="#faq">FAQ</a>
     </div>
-    <a href="#waitlist" class="btn solid">Early Access sichern</a>
+    <a href="#interestForm" class="btn solid">Interesse anmelden</a>
   </div>
 </nav>
 
 <section class="hero">
   <div class="wrap">
-    <span class="eyebrow">// Early Access · Warteliste offen</span>
+    <span class="eyebrow">// Beta · begrenzter Zugang</span>
     <h1>Dein Trading.<br/>Dein <span>Leben</span>. Ein Dashboard.</h1>
     <p class="sub">Trading-Journal, Marktüberblick, Kalender, Gewohnheiten, Kalorien- und Fitness-Tracking — jetzt mit
       MAX, deinem persönlichen KI-Assistenten, und eigener Trading-Community. Alles an einem Ort, statt in
       fünf verschiedenen Apps. Für Trader, die auch abseits vom Chart diszipliniert bleiben wollen.</p>
 
-    <div class="step-badge">Schritt 1 von 2 — Email für Zugang</div>
-    <form class="waitlist-form" id="waitlistForm" action="https://formspree.io/f/maqrewjz" method="POST">
-      <input type="email" name="email" id="waitlistEmail" placeholder="deine@email.de" required />
-      <button type="submit" class="btn solid">Zugang sichern →</button>
+    <form class="interest-form" id="interestForm" action="https://formspree.io/f/maqrewjz" method="POST">
+      <input type="email" name="email" id="interestEmail" placeholder="deine@email.de" required />
+      <button type="submit" class="btn solid">Interesse anmelden →</button>
     </form>
-    <div class="form-note">Kostenlos &amp; unverbindlich. Weiter geht's direkt zur Registrierung.</div>
-    <div class="form-success" id="waitlistSuccess">✓ Zugang bestätigt! Du wirst jetzt zur Registrierung weitergeleitet …</div>
+    <div class="form-note">Kostenlos &amp; unverbindlich — du hörst von uns, wenn ein Platz frei wird.</div>
+    <div class="form-success" id="interestSuccess">✓ Danke! Du bist auf der Liste.</div>
 
     <div class="hero-mock">
       <div class="bar"><span></span><span></span><span></span></div>
@@ -220,6 +235,123 @@
           <div class="sub">Trading, Habits &amp; Gesundheit kombiniert</div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="showcase" id="showcase">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="idx">// 00 — Ein Blick ins Dashboard</div>
+      <h2>So sieht's von innen aus</h2>
+      <p>Beispieldaten, echtes Layout — jeder Bereich live und mit eigenen Zahlen.</p>
+    </div>
+    <div class="screen-grid">
+
+      <div class="screen-card">
+        <div class="screen-card-head"><span class="ic">🧭</span><span class="lbl">Home · Neural Nexus</span></div>
+        <svg viewBox="0 0 260 140">
+          <circle cx="66" cy="70" r="44" fill="none" stroke="rgba(224,165,60,.15)" stroke-width="9"/>
+          <circle cx="66" cy="70" r="44" fill="none" stroke="var(--gold)" stroke-width="9" stroke-linecap="round"
+            stroke-dasharray="227 277" transform="rotate(-90 66 70)"/>
+          <text x="66" y="66" text-anchor="middle" font-size="24" font-weight="800" fill="var(--text)">82</text>
+          <text x="66" y="83" text-anchor="middle" font-size="8.5" letter-spacing="1" fill="var(--text-dim2)">SCORE</text>
+          <g font-size="9.5" fill="var(--text-dim)">
+            <circle cx="148" cy="42" r="4" fill="var(--green)"/><text x="158" y="45">Trading 78</text>
+            <circle cx="148" cy="70" r="4" fill="var(--gold)"/><text x="158" y="73">Fitness 85</text>
+            <circle cx="148" cy="98" r="4" fill="#7dd3fc"/><text x="158" y="101">Habits 84</text>
+          </g>
+        </svg>
+        <div class="screen-card-foot">Alle Bereiche zu <b>einem Score</b> kombiniert, live berechnet — plus frei anpinnbare Kästen.</div>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-card-head"><span class="ic">📈</span><span class="lbl">Trading Journal</span></div>
+        <svg viewBox="0 0 260 140">
+          <g stroke="rgba(255,255,255,.06)"><line x1="0" y1="30" x2="260" y2="30"/><line x1="0" y1="65" x2="260" y2="65"/><line x1="0" y1="100" x2="260" y2="100"/></g>
+          <polyline points="10,105 45,95 80,100 115,72 150,78 185,42 220,50 250,20" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <polyline points="10,105 45,95 80,100 115,72 150,78 185,42 220,50 250,20 250,125 10,125" fill="rgba(95,191,143,.1)" stroke="none"/>
+        </svg>
+        <div class="screen-card-foot"><b>Winrate 64 %</b> · Drawdown −8,2 % · Auswertung nach Strategie, Paar &amp; Session.</div>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-card-head"><span class="ic">🍽️</span><span class="lbl">Kalorien &amp; Fitness</span></div>
+        <svg viewBox="0 0 260 140">
+          <circle cx="62" cy="66" r="40" fill="none" stroke="rgba(224,165,60,.15)" stroke-width="9"/>
+          <circle cx="62" cy="66" r="40" fill="none" stroke="var(--gold)" stroke-width="9" stroke-linecap="round"
+            stroke-dasharray="169 251" transform="rotate(-90 62 66)"/>
+          <text x="62" y="62" text-anchor="middle" font-size="14" font-weight="800" fill="var(--text)">1847</text>
+          <text x="62" y="76" text-anchor="middle" font-size="7.5" fill="var(--text-dim2)">/ 2100 KCAL</text>
+          <g font-size="8.5" fill="var(--text-dim)">
+            <text x="135" y="35">Protein</text>
+            <rect x="135" y="40" width="100" height="6" rx="3" fill="rgba(255,255,255,.08)"/>
+            <rect x="135" y="40" width="78" height="6" rx="3" fill="var(--green)"/>
+            <text x="135" y="66">Carbs</text>
+            <rect x="135" y="71" width="100" height="6" rx="3" fill="rgba(255,255,255,.08)"/>
+            <rect x="135" y="71" width="60" height="6" rx="3" fill="var(--gold)"/>
+            <text x="135" y="97">Fett</text>
+            <rect x="135" y="102" width="100" height="6" rx="3" fill="rgba(255,255,255,.08)"/>
+            <rect x="135" y="102" width="45" height="6" rx="3" fill="#e0655c"/>
+          </g>
+        </svg>
+        <div class="screen-card-foot">Kalorien-/Eiweißziel per <b>Harris-Benedict</b>, Rezepte, Gewichts- &amp; Schlafverlauf.</div>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-card-head"><span class="ic">🗓️</span><span class="lbl">Kalender &amp; Fristen</span></div>
+        <svg viewBox="0 0 260 140">
+          <g font-size="8" fill="var(--text-dim2)" text-anchor="middle">
+            <text x="21" y="12">MO</text><text x="57" y="12">DI</text><text x="93" y="12">MI</text>
+            <text x="129" y="12">DO</text><text x="165" y="12">FR</text><text x="201" y="12">SA</text><text x="237" y="12">SO</text>
+          </g>
+          <rect x="6" y="18" width="30" height="80" rx="6" fill="rgba(255,255,255,.03)"/>
+          <rect x="42" y="18" width="30" height="80" rx="6" fill="rgba(255,255,255,.03)"/>
+          <rect x="78" y="18" width="30" height="80" rx="6" fill="rgba(255,255,255,.03)"/>
+          <rect x="114" y="18" width="30" height="80" rx="6" fill="rgba(224,165,60,.18)" stroke="var(--gold)" stroke-width="1.5"/>
+          <rect x="150" y="18" width="30" height="80" rx="6" fill="rgba(255,255,255,.03)"/>
+          <rect x="186" y="18" width="30" height="80" rx="6" fill="rgba(255,255,255,.03)"/>
+          <rect x="222" y="18" width="30" height="80" rx="6" fill="rgba(255,255,255,.03)"/>
+          <circle cx="93" cy="36" r="3" fill="#7dd3fc"/>
+          <circle cx="129" cy="48" r="3" fill="var(--gold)"/>
+          <circle cx="129" cy="62" r="3" fill="var(--green)"/>
+          <circle cx="201" cy="40" r="3" fill="#e0655c"/>
+          <text x="129" y="118" text-anchor="middle" font-size="8.5" fill="var(--text)">Heute · 2 Termine</text>
+        </svg>
+        <div class="screen-card-foot">Termine, <b>Fristen mit Vorlauf-Warnung</b>, Dokumente &amp; Einkaufslisten an einem Ort.</div>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-card-head"><span class="ic">💬</span><span class="lbl">Edge Feed &amp; Community</span></div>
+        <svg viewBox="0 0 260 140">
+          <circle cx="24" cy="24" r="14" fill="var(--gold-dim)"/>
+          <text x="24" y="28" text-anchor="middle" font-size="12" fill="#1a1206" font-weight="800">S</text>
+          <text x="46" y="21" font-size="10" fill="var(--text)" font-weight="700">sebi_trades</text>
+          <text x="46" y="32" font-size="8" fill="var(--text-dim2)">vor 2 Std</text>
+          <rect x="6" y="44" width="248" height="62" rx="8" fill="rgba(255,255,255,.03)"/>
+          <text x="18" y="66" font-size="11" fill="var(--text)">🎯 +2.4R Gold Long</text>
+          <text x="18" y="84" font-size="9" fill="var(--text-dim)">Sauberer Breakout, Regeln eingehalten.</text>
+          <text x="18" y="122" font-size="9" fill="var(--text-dim2)">♥ 18 · 💬 4 · ↗ geteilt</text>
+        </svg>
+        <div class="screen-card-foot">Erfolge teilen, <b>Freunde &amp; Gruppen</b>, wöchentlicher Rückblick jeden Sonntag.</div>
+      </div>
+
+      <div class="screen-card">
+        <div class="screen-card-head"><span class="ic">🤖</span><span class="lbl">XCO Bot</span></div>
+        <svg viewBox="0 0 260 140">
+          <text x="130" y="22" text-anchor="middle" font-size="11" fill="var(--text)" font-weight="700">XAUUSD · Bullish</text>
+          <rect x="20" y="60" width="73" height="14" fill="#e0655c"/>
+          <rect x="93" y="60" width="74" height="14" fill="#e0a53c"/>
+          <rect x="167" y="60" width="73" height="14" fill="#5fbf8f"/>
+          <path d="M200 48 L208 60 L192 60 Z" fill="var(--text)"/>
+          <g font-size="8" fill="var(--text-dim2)" text-anchor="middle">
+            <text x="56" y="90">Bearish</text><text x="130" y="90">Neutral</text><text x="203" y="90">Bullish</text>
+          </g>
+          <text x="130" y="118" text-anchor="middle" font-size="8.5" fill="var(--text-dim)">Fundamentale Analyse — keine Kauf-/Verkaufssignale</text>
+        </svg>
+        <div class="screen-card-foot">Marktkontext auf einen Blick — <b>ersetzt keine eigene Analyse</b>.</div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -312,10 +444,10 @@
     <div class="section-head">
       <div class="idx">// 03 — Preise</div>
       <h2>Ein einfacher monatlicher Plan</h2>
-      <p>Der finale Preis wird beim Launch bekanntgegeben — Warteliste sichert dir einen Frühbucher-Vorteil.</p>
+      <p>Der finale Preis wird beim Launch bekanntgegeben — aktuell läuft eine geschlossene Beta mit begrenzten Plätzen.</p>
     </div>
     <div class="price-card">
-      <div class="tag">Early Access</div>
+      <div class="tag">Beta</div>
       <div class="amount">TBD <small>/ Monat</small></div>
       <ul>
         <li>Vollzugriff auf alle Bereiche</li>
@@ -324,7 +456,7 @@
         <li>Edge Feed Community &amp; über 10 Designs</li>
         <li>Monatlich kündbar</li>
       </ul>
-      <a href="#waitlist" class="btn solid" style="width:100%;">Frühbucher-Preis sichern</a>
+      <a href="#access" class="btn solid" style="width:100%;">Interesse anmelden</a>
     </div>
     <p class="price-note">Preis wird vor Launch final festgelegt und hier aktualisiert.</p>
   </div>
@@ -337,8 +469,8 @@
       <h2>Häufige Fragen</h2>
     </div>
     <div class="faq-item">
-      <h3>Wann geht TRADER OS online?</h3>
-      <p>Wir arbeiten aktuell am Übergang von der lokalen App zur Web-Version. Warteliste-Mitglieder erfahren als Erstes vom Start.</p>
+      <h3>Kann ich mich einfach registrieren?</h3>
+      <p>Aktuell läuft eine Beta mit begrenzten Plätzen. Die Registrierung ist ein separater Schritt und kein automatischer Teil dieser Seite.</p>
     </div>
     <div class="faq-item">
       <h3>Sind meine Daten sicher?</h3>
@@ -359,16 +491,15 @@
   </div>
 </section>
 
-<section class="final-cta" id="waitlist">
+<section class="final-cta" id="access">
   <div class="wrap">
-    <h2>Sichere dir jetzt deinen Platz</h2>
-    <p>Email eintragen und direkt weiter zur Registrierung.</p>
-    <div class="step-badge">Schritt 1 von 2 — Email für Zugang</div>
-    <form class="waitlist-form" id="waitlistForm2" action="https://formspree.io/f/maqrewjz" method="POST">
-      <input type="email" name="email" id="waitlistEmail2" placeholder="deine@email.de" required />
-      <button type="submit" class="btn solid">Zugang sichern →</button>
+    <h2>Neugierig geworden?</h2>
+    <p>TRADER OS läuft aktuell als geschlossene Beta mit begrenzten Plätzen. Trag dich ein, dann hörst du als Erstes von uns.</p>
+    <form class="interest-form" id="interestForm2" action="https://formspree.io/f/maqrewjz" method="POST">
+      <input type="email" name="email" id="interestEmail2" placeholder="deine@email.de" required />
+      <button type="submit" class="btn solid">Interesse anmelden →</button>
     </form>
-    <div class="form-success" id="waitlistSuccess2">✓ Zugang bestätigt! Du wirst jetzt zur Registrierung weitergeleitet …</div>
+    <div class="form-success" id="interestSuccess2">✓ Danke! Du bist auf der Liste.</div>
   </div>
 </section>
 
@@ -384,40 +515,34 @@
 </footer>
 
 <script>
-  var REGISTER_URL = "https://webapp-production-f4b9.up.railway.app/register";
-
-  function wireWaitlistForm(formId, successId){
+  // Interesse-Formular: geht NUR an Formspree (grobe Interesse-Zaehlung fuer
+  // z.B. TikTok-Traffic). Diese Seite bietet bewusst KEINEN Weg zur echten
+  // Registrierung -- die ist ein komplett separater Link/Schritt, nicht
+  // Teil dieser oeffentlichen Seite.
+  function wireInterestForm(formId, successId){
     var form = document.getElementById(formId);
     var success = document.getElementById(successId);
     if(!form) return;
     form.addEventListener("submit", function(e){
       e.preventDefault();
       var formData = new FormData(form);
-      var email = formData.get("email") || "";
       var action = form.getAttribute("action") || "";
       var isConfigured = action.indexOf("YOUR_FORM_ID") === -1;
-      if(isConfigured){
-        fetch(action, { method: "POST", body: formData, headers: { "Accept": "application/json" } })
-          .then(function(){ goToRegister(); })
-          .catch(function(){ goToRegister(); });
-      } else {
-        // Formular-Endpunkt (z.B. Formspree) noch nicht eingerichtet — trotzdem
-        // direkt weiter zur Registrierung, damit der Fluss testbar bleibt.
-        goToRegister();
-      }
-      function goToRegister(){
+      function showSuccess(){
         form.style.display = "none";
         if(success){ success.classList.add("show"); }
-        // Email wird als Query-Parameter mitgegeben, damit sie auf der
-        // Registrierungsseite (Schritt 2) automatisch vorausgefüllt ist.
-        setTimeout(function(){
-          window.location.href = REGISTER_URL + "?email=" + encodeURIComponent(email);
-        }, 900);
+      }
+      if(isConfigured){
+        fetch(action, { method: "POST", body: formData, headers: { "Accept": "application/json" } })
+          .then(showSuccess)
+          .catch(showSuccess);
+      } else {
+        showSuccess();
       }
     });
   }
-  wireWaitlistForm("waitlistForm", "waitlistSuccess");
-  wireWaitlistForm("waitlistForm2", "waitlistSuccess2");
+  wireInterestForm("interestForm", "interestSuccess");
+  wireInterestForm("interestForm2", "interestSuccess2");
 </script>
 </body>
 </html>
